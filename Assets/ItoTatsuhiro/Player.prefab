@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 0}
   _movespeed_x: 5
-  _jumppower: 10
+  _jumppower: 7
 --- !u!50 &6371541392094749420
 Rigidbody2D:
   serializedVersion: 4
