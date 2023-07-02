@@ -21,6 +21,11 @@ public class Player : MonoBehaviour
 
     private float _bullet_interval_count = 0;
 
+    [SerializeField]
+    private float _jump_max = 1;        //ジャンプ回数
+
+    private float _jump_count = 0;      //ジャンプ回数のカウント
+
 
     private void Start()
     {
@@ -36,13 +41,13 @@ public class Player : MonoBehaviour
  
         _rigidbody.velocity = move;
 
+            if (Input.GetButtonDown("Jump") && _jump_count < _jump_max)
+            {
+                _jump_count++;
 
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            Vector2 jump = new Vector2(0, _jumppower);
-            _rigidbody.AddForce(jump, ForceMode2D.Impulse);
-        }
+                Vector2 jump = new Vector2(0, _jumppower);
+                _rigidbody.AddForce(jump, ForceMode2D.Impulse);
+            }
     }
 
     void Bullet()
@@ -50,12 +55,13 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButton(0) && _bullet_interval_count <= 0)
         {
 
+
             Instantiate(bullet, new Vector3(transform.position.x + 2.0f, transform.position.y, transform.position.z), transform.rotation);
 
             _bullet_interval_count = _bullet_interval;
         }
 
-        if (_bullet_interval_count != 0)
+        if (_bullet_interval_count > 0)
         {
             _bullet_interval_count -= Time.deltaTime;
         }
@@ -69,4 +75,15 @@ public class Player : MonoBehaviour
         move();
         Bullet();
     }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Grond"))
+        {
+            _jump_count = 0;
+        }
+    }
+
+
 }
