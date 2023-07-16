@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        _direction = 1;
+        _direction = (int)Direction.RIGHT;
         _animator = GetComponent<Animator>();                //アニメーターの取得
         _spriteRenderer = GetComponent<SpriteRenderer>();    //スプライトレンダラーの取得
         _rigidbody = GetComponent<Rigidbody2D>();           //リジットボディの取得
@@ -75,6 +75,8 @@ public class Player : MonoBehaviour
             move.y = _jumppower;
 
             _animator.SetTrigger("JumpTrigger");
+            _animator.SetBool("Ground", false);
+
             //Vector2 jump = new Vector2(0, _jumppower);
             //_rigidbody.AddForce(jump, ForceMode2D.Impulse);
         }
@@ -82,7 +84,7 @@ public class Player : MonoBehaviour
         if (axis != 0)
         {
             _spriteRenderer.flipX = axis < 0;
-            move.x = axis * 2;
+            move.x = axis * _movespeed_x;
         }
         _rigidbody.velocity = move;
 
@@ -124,10 +126,19 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Grond"))
         {
+            if(_jump_count != 0)
+            {
+                _animator.SetBool("Ground", true);
+            }
             _jump_count = 0;
+
         }
 
-        _animator.SetTrigger(hashDamage);
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            _animator.SetTrigger(hashDamage);
+        }
+
 
     }
 }

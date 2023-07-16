@@ -104,8 +104,9 @@ MonoBehaviour:
     m_Bits: 0
   _animator: {fileID: 0}
   _spriteRenderer: {fileID: 0}
-  bullet: {fileID: 0}
-  _movespeed_x: 5
-  _jumppower: 5
-  _bullet_interval: 1
-  _jump_count_max: 1
+  bullet: {fileID: 2083723940183588970, guid: e0d2a162b045729469961a66eba3c31c, type: 3}
+  _direction: 0
+  _movespeed_x: 10
+  _jumppower: 7
+  _bullet_interval: 0.5
+  _jump_count_max: 2
