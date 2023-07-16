@@ -1,28 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class Goal : MonoBehaviour
+public class scene_1_select : MonoBehaviour
 {
-    [SerializeField] Text text;
     // Start is called before the first frame update
+   
+
     void Start()
     {
-        text.enabled = false;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    public void sceneselect(string name)
     {
-        if (collision.gameObject.tag == "Goalline")
-        {
-            text.enabled = true;
-        }
+        SceneManager.LoadScene(name); 
     }
 }
