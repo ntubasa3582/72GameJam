@@ -126,10 +126,9 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Grond"))
         {
-            if(_jump_count != 0)
-            {
-                _animator.SetBool("Ground", true);
-            }
+
+            _animator.SetBool("Ground", true);
+            
             _jump_count = 0;
 
         }
