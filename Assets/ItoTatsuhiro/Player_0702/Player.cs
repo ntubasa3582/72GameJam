@@ -21,19 +21,28 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject bullet = null;       //プレイヤーの発射する弾
     Rigidbody2D _rigidbody = null;
 
+    public int _direction = 1;         //発射される方向, 1の時右に、-1のとき左に弾が飛ぶ
+
     [SerializeField] private float _movespeed_x = 5.0f;     //移動速度
 
     [SerializeField] private float _jumppower = 10.0f;        //ジャンプ力
 
     [SerializeField] private float _bullet_interval = 1.0f;     //弾の発射間隔
-    private float _bullet_interval_count = 0;       
+    private float _bullet_interval_count = 0;
 
     [SerializeField] private float _jump_count_max = 1;        //ジャンプ回数
     private float _jump_count = 0;      //ジャンプ回数のカウント
 
+    enum Direction
+    {
+        RIGHT = 1,          // 右向き
+        LEFT = -1           // 左向き
+    };
+
 
     private void Start()
     {
+        _direction = 1;
         _animator = GetComponent<Animator>();                //アニメーターの取得
         _spriteRenderer = GetComponent<SpriteRenderer>();    //スプライトレンダラーの取得
         _rigidbody = GetComponent<Rigidbody2D>();           //リジットボディの取得
@@ -43,11 +52,18 @@ public class Player : MonoBehaviour
     void move()
     {
         float axis = Input.GetAxis("Horizontal");      //横の移動
-        bool isDown = Input.GetAxisRaw("Vertical") < 0;     
+        bool isDown = Input.GetAxisRaw("Vertical") < 0;
 
+        //向いている方向を取得
+        if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && _direction == (int)Direction.RIGHT)
+        {
+            _direction = (int)Direction.LEFT;
+        }
+        else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && _direction == (int)Direction.LEFT)
+        {
+            _direction = (int)Direction.RIGHT;
+        }
 
-        //Vector2 move = new Vector2(x * _movespeed_x, _rigidbody.velocity.y);
- 
 
         Vector2 move = _rigidbody.velocity;
         //_rigidbody.velocity = move;
@@ -58,6 +74,7 @@ public class Player : MonoBehaviour
 
             move.y = _jumppower;
 
+            _animator.SetTrigger("JumpTrigger");
             //Vector2 jump = new Vector2(0, _jumppower);
             //_rigidbody.AddForce(jump, ForceMode2D.Impulse);
         }
@@ -76,18 +93,16 @@ public class Player : MonoBehaviour
         _animator.SetFloat(hashGroundDistance, distanceFromGround.distance == 0 ? 99 : distanceFromGround.distance - characterHeightOffset);
         _animator.SetFloat(hashFallSpeed, _rigidbody.velocity.y);
         _animator.SetFloat(hashSpeed, Mathf.Abs(axis));
-
-
-
     }
 
     void Bullet()
     {
         if (Input.GetMouseButton(0) && _bullet_interval_count <= 0)
         {
+            Vector3 spawn_pos = transform.position + new Vector3(3 * _direction, 0, 0);
 
-
-            Instantiate(bullet, new Vector3(transform.position.x + 2.0f, transform.position.y, transform.position.z), transform.rotation);
+            var b = Instantiate(bullet, spawn_pos, transform.rotation);
+            b.GetComponent<bullet>().SetDir(_direction);
 
             _bullet_interval_count = _bullet_interval;
         }
@@ -99,14 +114,11 @@ public class Player : MonoBehaviour
 
     }
 
-
-
     void Update()
     {
         move();
         Bullet();
     }
-
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -118,6 +130,4 @@ public class Player : MonoBehaviour
         _animator.SetTrigger(hashDamage);
 
     }
-
-
 }
