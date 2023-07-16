@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Deth : MonoBehaviour
 {
+    bool _swich = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +20,20 @@ public class Deth : MonoBehaviour
     {
         if (collision.gameObject.tag == "DethLine" || collision.gameObject.tag == "Enemy")
         {
-            transform.position = new Vector2(-2.914873f, -0.4052666f);
+            if (_swich == false)
+            {
+                transform.position = new Vector2(-2.914873f, -0.4052666f);
+            }
+            if(_swich == true)
+            {
+                transform.position = new Vector2(43f,4f);
+            }
+
+        }
+        if (collision.gameObject.tag == "tyukan")
+        {
+            _swich = true;
+            Destroy(collision.gameObject);
         }
     }
 }
